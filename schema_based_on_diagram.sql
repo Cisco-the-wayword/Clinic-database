@@ -40,3 +40,32 @@ ALTER TABLE
     "invoice_items" ADD CONSTRAINT "invoice_items_treatment_id_unique" UNIQUE("treatment_id");
 ALTER TABLE
     "invoice_items" ADD CONSTRAINT "invoice_items_invoice_id_foreign" FOREIGN KEY("invoice_id") REFERENCES "invoices"("id");
+
+CREATE TABLE "treatments"(
+    "id" INTEGER NOT NULL,
+    "type" VARCHAR(255) NOT NULL,
+    "name" VARCHAR(255) NOT NULL
+);
+ALTER TABLE
+    "treatments" ADD PRIMARY KEY("id");
+CREATE TABLE "invoices"(
+    "id" INTEGER NOT NULL,
+    "total_amount" DECIMAL(8, 2) NOT NULL,
+    "generated_at" TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+    "payed_at" TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+    "medical_history_id" BIGINT NOT NULL
+);
+CREATE INDEX "invoices_medical_history_id_index" ON
+    "invoices"("medical_history_id");
+ALTER TABLE
+    "invoices" ADD PRIMARY KEY("id");
+ALTER TABLE
+    "invoices" ADD CONSTRAINT "invoices_medical_history_id_unique" UNIQUE("medical_history_id");
+ALTER TABLE
+    "invoice_items" ADD CONSTRAINT "invoice_items_treatment_id_foreign" FOREIGN KEY("treatment_id") REFERENCES "treatments"("id");
+ALTER TABLE
+    "invoices" ADD CONSTRAINT "invoices_medical_history_id_foreign" FOREIGN KEY("medical_history_id") REFERENCES "medical_histories"("id");
+CREATE TABLE medical_documents (
+  medical_histories_id INT references medical_histories(id),
+  treatments_id INT references treatments(id)
+  );
